@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- -->
+
+<!-- HEAD -->
+<?php include __DIR__ . '/partials/head.php' ?>
+
+<body>
+    <!-- Sidebar/menu -->
+    <?php include __DIR__ . '/partials/sidebar.php' ?>
+
+    <!-- Top menu on small screens -->
+    <?php include __DIR__ . '/partials/header.php' ?>
+
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <?php include __DIR__ . '/partials/overlay.php' ?>
+
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main" style="margin-left:250px">
+
+        <!-- Push down content on small screens -->
+        <div class="w3-hide-large" style="margin-top:83px"></div>
+
+        <!-- Top header -->
+        <?php include __DIR__ . '/partials/contentHeader.php' ?>
+
+        <!-- Image header -->
+        <?php include __DIR__ . '/partials/hero.php' ?>
+
+        <div class="w3-container w3-text-grey" id="jeans">
+            <p>8 items</p>
+        </div>
+
+        <!-- Product grid -->
+        <div class="w3-row w3-grayscale">
+            <div class="w3-col l3 s6">
+                <div class="w3-container">
+                    <img src="/w3images/jeans1.jpg" style="width:100%">
+                    <p>Ripped Skinny Jeans<br><b>$24.99</b></p>
+                </div>
+                <div class="w3-container">
+                    <img src="/w3images/jeans2.jpg" style="width:100%">
+                    <p>Mega Ripped Jeans<br><b>$19.99</b></p>
+                </div>
+            </div>
+
+            <div class="w3-col l3 s6">
+                <div class="w3-container">
+                    <div class="w3-display-container">
+                        <img src="/w3images/jeans2.jpg" style="width:100%">
+                        <span class="w3-tag w3-display-topleft">New</span>
+                        <div class="w3-display-middle w3-display-hover">
+                            <button class="w3-button w3-black">Buy now <i class="fa fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <p>Mega Ripped Jeans<br><b>$19.99</b></p>
+                </div>
+                <div class="w3-container">
+                    <img src="/w3images/jeans3.jpg" style="width:100%">
+                    <p>Washed Skinny Jeans<br><b>$20.50</b></p>
+                </div>
+            </div>
+
+            <div class="w3-col l3 s6">
+                <div class="w3-container">
+                    <img src="/w3images/jeans3.jpg" style="width:100%">
+                    <p>Washed Skinny Jeans<br><b>$20.50</b></p>
+                </div>
+                <div class="w3-container">
+                    <div class="w3-display-container">
+                        <img src="/w3images/jeans4.jpg" style="width:100%">
+                        <span class="w3-tag w3-display-topleft">Sale</span>
+                        <div class="w3-display-middle w3-display-hover">
+                            <button class="w3-button w3-black">Buy now <i class="fa fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <p>Vintage Skinny Jeans<br><b class="w3-text-red">$14.99</b></p>
+                </div>
+            </div>
+
+            <div class="w3-col l3 s6">
+                <div class="w3-container">
+                    <img src="/w3images/jeans4.jpg" style="width:100%">
+                    <p>Vintage Skinny Jeans<br><b>$14.99</b></p>
+                </div>
+                <div class="w3-container">
+                    <img src="/w3images/jeans1.jpg" style="width:100%">
+                    <p>Ripped Skinny Jeans<br><b>$24.99</b></p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Footer -->
+        <?php include __DIR__ . '/partials/footer.php' ?>
+
+        <!-- Credits -->
+        <?php include __DIR__ . '/partials/credits.php' ?>
+
+
+        <!-- End page content -->
+    </div>
+
+    <script src="Js/scripts.js"></script>
+</body>
+</html>
+
+
+<?php
+
+?>
