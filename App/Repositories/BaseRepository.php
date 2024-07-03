@@ -17,11 +17,11 @@ abstract class BaseRepository
 
 
     /**
-     * @param array|null $where
-     * @param array|null $join
+     * @param array $where
+     * @param array $join
      * @return array
      */
-    public function get(array|null $where=[], array|null $join=[]) : array
+    public function get(array $where=[], array $join=[]) : array
     {
         $params = [];
         $query = "SELECT * FROM " . $this->table();
@@ -70,8 +70,15 @@ abstract class BaseRepository
     #[ArrayShape(['params' => "array", 'query' => "string"])]
     public function addWhereClause(string $query, array $where) : array
     {
-        $query .= " WHERE {$where['column']} {$where['operator']} :{$where['column']}";
-        $params = [":{$where['column']}" => $where['value']];
+        $query .= " WHERE 1=1 ";
+        $params = [];
+
+        foreach ($where as $w) {
+            $paramName = str_replace('.', '_', $w['column']); // Reemplaza '.' con '_' para evitar errores en la consulta
+            $query .= "AND {$w['column']} {$w['operator']} :{$paramName} ";
+            $params[":{$paramName}"] = $w['value'];
+        }
+
         return ['params' => $params, 'query' => $query];
     }
 
@@ -85,7 +92,6 @@ abstract class BaseRepository
         $stmt = $this->pdo->prepare($query);
         $data = $this->prepareExecute($data);
         $stmt->execute($data);
-
         return $this->pdo->lastInsertId();
     }
 

@@ -9,6 +9,14 @@ class Constants
     const DB_PORT = '3306';
     const DB_USER = 'root';
     const DB_PASS = '';
-    const ADMIN_USER = 'admin';
-    const ADMIN_PASS = 'admin';
+    const CRUD_USER = 'admin';
+    const CRUD_PASS = 'admin';
+    const RU_USER = 'noadmin';
+    const RU_PASS = 'noadmin';
+    const IMAGES_DIR = './Assets/Images/';
+    const PRODUCTS_JOIN =  [
+            ['type' => 'INNER', 'table' => 'products_categories', 'on' => ['left' => 'products.id_products_categories', 'right' => 'products_categories.id']],
+            ['type' => 'INNER', 'table' => 'products_details', 'on' => ['left' => 'products.id_products_details', 'right' => 'products_details.id']],
+            ['type' => 'INNER', 'table' => 'products_images', 'on' => ['left' => 'products.id_products_images', 'right' => 'products_images.id']]
+        ];
 }
