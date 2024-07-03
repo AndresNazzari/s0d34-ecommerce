@@ -4,6 +4,8 @@ require_once '../vendor/autoload.php';
 use App\Config\Constants;
 use App\Config\DbConfig;
 use App\Models\PermissionModel;
+use App\Repositories\DetailRepository;
+use App\Repositories\ImageRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\UserRepository;
 use App\Services\ProductService;
@@ -13,18 +15,23 @@ session_start();
 
 DbConfig::createUsers();
 $partialsDir = __DIR__ . '/partials/';
+$where = [
+    ['column' => 'products.is_deleted', 'operator' => '=', 'value' => 0]
+];
 
 if (isset($_GET['C'])) {
     $idCategory = (int)$_GET['C'];
-    $where = [
+    $whereCategory = [
         ['column' => 'products.id_products_categories', 'operator' => '=', 'value' => $idCategory]
     ];
-} else {
-    $where = [];
+    $where = array_merge($where, $whereCategory);
 }
 
 $productRepository = new ProductRepository();
-$productService = new ProductService($productRepository);
+$detailRepository = new DetailRepository();
+$imageRepository = new ImageRepository();
+$productService = new ProductService($productRepository, $detailRepository, $imageRepository);
+
 $userRepository = new UserRepository();
 $userService = new UserService($userRepository);
 
@@ -85,10 +92,10 @@ $_SESSION['canEdit'] = $userId && $userService->can(PermissionModel::UPDATE, $us
                             <div class="d-flex justify-content-between">
                                 <a href="../Public/detail.php?id=<?php echo $product->id ?>" class="btn btn-primary">Details</a>
                                 <?php if ($_SESSION['canEdit']): ?>
-                                    <a href="../Public/edit.php?id=<?php echo $product->id ?>" class="btn btn-warning">Edit</a>
+                                    <a href="../Public/detail.php?id=<?php echo $product->id ?>&edit=true" class="btn btn-warning">Edit</a>
                                 <?php endif; ?>
                                 <?php if ($_SESSION['canDelete']): ?>
-                                    <form action="../App/Controllers/ProductController.php" method="post" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                    <form action="../App/Controllers/ProductController.php?id=<?php echo $product->id ?>" method="post" onsubmit="return confirm('Are you sure you want to delete this product?');">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="productId" value="<?php echo $product->id ?>">
                                         <button type="submit" class="btn btn-danger">Delete</button>

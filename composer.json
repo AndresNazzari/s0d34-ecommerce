@@ -5,6 +5,8 @@
     }
   },
   "require": {
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "intervention/image": "^3.6",
+    "nesbot/carbon": "^3.5"
   }
 }

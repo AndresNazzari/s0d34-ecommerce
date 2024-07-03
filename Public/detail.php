@@ -2,31 +2,47 @@
 require_once '../vendor/autoload.php';
 
 use App\Config\Constants;
+use App\Repositories\CategoryRepository;
+use App\Repositories\DetailRepository;
+use App\Repositories\ImageRepository;
 use App\Repositories\ProductRepository;
+use App\Services\CategoryService;
+use App\Services\ImageService;
 use App\Services\ProductService;
 session_start();
 
 $partialsDir = __DIR__ . '/partials/';
 
+$editMode = isset($_GET['edit']) && $_GET['edit'] === 'true';
+
+$where = [
+    ['column' => 'products.is_deleted', 'operator' => '=', 'value' => 0]
+];
+
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];
-    $where = [
+    $whereId = [
         ['column' => 'products.id', 'operator' => '=', 'value' => $id]
     ];
-} else {
-    $where = [];
+    $where = array_merge($where, $whereId);
 }
 
+$categoryRepository = new CategoryRepository();
+$categoryService = new CategoryService($categoryRepository);
+$categories = $categoryService->get();
+
+$imageRepository = new ImageRepository();
+$imageService = new ImageService($imageRepository);
+
 $productRepository = new ProductRepository();
-$productService = new ProductService($productRepository);
+$detailRepository = new DetailRepository();
+$productService = new ProductService($productRepository, $detailRepository, $imageService);
 
 $products = $productService->get($where,  Constants::PRODUCTS_JOIN);
 
 ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <!-- -->
-
+<!DOCTYPE html>
+<html lang="en">
     <!-- HEAD -->
     <?php include $partialsDir . 'head.php' ?>
 
@@ -69,23 +85,60 @@ $products = $productService->get($where,  Constants::PRODUCTS_JOIN);
                             <img src="<?php echo Constants::IMAGES_DIR . $product->path ?>" class="img-fluid" alt="<?php echo $product->name ?>" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between">
-                            <h5 class="card-title"><?php echo $product->name ?></h5>
-                            <b>$<?php echo $product->price ?></b>
-                            <p class="card-text"><?php echo $product->description ?></p>
-                            <div class="d-flex justify-content-between">
-                                <a href="index.php" class="btn btn-primary">Volver</a>
-                                <?php if ($_SESSION['canEdit']): ?>
-                                    <a href="../Public/edit.php?id=<?php echo $product->id ?>" class="btn btn-warning">Edit</a>
-                                <?php endif; ?>
-                                <?php if ($_SESSION['canDelete']): ?>
-                                    <form action="../App/Controllers/ProductController.php" method="post" onsubmit="return confirm('Are you sure you want to delete this product?');">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="productId" value="<?php echo $product->id ?>">
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
-                                <?php endif; ?>
-                            </div>
+                            <?php if ($editMode): ?>
+                                <form action="../App/Controllers/ProductController.php" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to update this product?');">
+                                    <input type="hidden" name="action" value="update">
+                                    <input type="hidden" name="productId" value="<?php echo $product->id ?>">
+                                    <div class="mb-3">
+                                        <label for="productImage" class="form-label">Image</label>
+                                        <input type="file" class="form-control" id="productImage" name="image">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="productName" class="form-label">Title</label>
+                                        <input type="text" class="form-control" id="productName" name="name" value="<?php echo $product->name ?>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="productPrice" class="form-label">Price</label>
+                                        <input type="text" class="form-control" id="productPrice" name="price" value="<?php echo $product->price ?>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="productDescription" class="form-label">Description</label>
+                                        <textarea class="form-control" id="productDescription" name="description"><?php echo $product->description ?></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="productCategory" class="form-label">Category</label>
+                                         <select class="form-control" id="productCategory" name="category">
+                                            <?php foreach ($categories as $category): ?>
+                                                <option value="<?php echo $category->id ?>" <?php if ($category->id == $product->id_products_categories) echo 'selected'; ?>>
+                                                    <?php echo $category->name ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="detail.php?id=<?php echo $product->id ?>" class="btn btn-primary">Volver</a>
+                                        <button type="submit" class="btn btn-success">Save</button>
+                                    </div>
+                                </form>
+                            <?php else: ?>
 
+                                <h5 class="card-title"><?php echo $product->name ?></h5>
+                                <b>$<?php echo $product->price ?></b>
+                                <p class="card-text"><?php echo $product->description ?></p>
+                                <div class="d-flex justify-content-between">
+                                    <a href="index.php" class="btn btn-primary">Volver</a>
+                                    <?php if ($_SESSION['canEdit']): ?>
+                                        <a href="detail.php?id=<?php echo $product->id ?>&edit=true" class="btn btn-warning">Edit</a>
+                                    <?php endif; ?>
+                                    <?php if ($_SESSION['canDelete']): ?>
+                                        <form action="../App/Controllers/ProductController.php?id=<?php echo $product->id ?>" method="post" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="productId" value="<?php echo $product->id ?>">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -106,9 +159,4 @@ $products = $productService->get($where,  Constants::PRODUCTS_JOIN);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="Js/scripts.js"></script>
     </body>
-    </html>
-
-
-<?php
-
-?>
+</html>

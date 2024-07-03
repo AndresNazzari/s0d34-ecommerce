@@ -105,6 +105,8 @@ abstract class BaseRepository
         $query = $this->updateQuery($data);
         $stmt = $this->pdo->prepare($query);
         $data = $this->prepareExecute($data, $id);
+
+
         $stmt->execute($data);
     }
 
@@ -153,7 +155,6 @@ abstract class BaseRepository
         }
         $query .= implode(', ', $params);
         $query .= " WHERE id = :id";
-
         return $query;
     }
 

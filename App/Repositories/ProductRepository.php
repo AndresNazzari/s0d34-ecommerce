@@ -20,9 +20,10 @@ class ProductRepository extends BaseRepository
     {
         return [
             'id',
-            'id_products_category',
+            'id_products_categories',
             'id_products_details',
-            'id_products_images'
+            'id_products_images',
+            'is_deleted'
         ];
     }
 
