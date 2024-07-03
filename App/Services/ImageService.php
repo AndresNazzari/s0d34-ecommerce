@@ -19,7 +19,7 @@ class ImageService
 
         $path = __DIR__ . '/../../Public/Assets/Images/' . $name;
         $this->imageRepository->upload($image['tmp_name'], $path);
-v
+
         return $name;
     }
 

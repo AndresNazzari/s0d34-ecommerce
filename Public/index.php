@@ -8,6 +8,7 @@ use App\Repositories\DetailRepository;
 use App\Repositories\ImageRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\UserRepository;
+use App\Services\ImageService;
 use App\Services\ProductService;
 use App\Services\UserService;
 
@@ -27,10 +28,12 @@ if (isset($_GET['C'])) {
     $where = array_merge($where, $whereCategory);
 }
 
+$imageRepository = new ImageRepository();
+$imageService = new ImageService($imageRepository);
+
 $productRepository = new ProductRepository();
 $detailRepository = new DetailRepository();
-$imageRepository = new ImageRepository();
-$productService = new ProductService($productRepository, $detailRepository, $imageRepository);
+$productService = new ProductService($productRepository, $detailRepository, $imageService);
 
 $userRepository = new UserRepository();
 $userService = new UserService($userRepository);

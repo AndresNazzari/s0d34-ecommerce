@@ -43,13 +43,14 @@ class ProductService
         $this->detailRepository->update($id, $detailData);
 
         if ($data['image']) {
-            $path = $this->imageService->upload($data['image']);
+            $fileName = $this->imageService->upload($data['image']);
 
             $imageData = [
-                'path' => $path
+                'path' => $fileName
             ];
 
             $this->imageService->update($id, $imageData);
+
         }
     }
 
