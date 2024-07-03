@@ -43,6 +43,7 @@ $products = $productService->get($where,  Constants::PRODUCTS_JOIN);
 $userId = $_SESSION['userId'] ?? null;
 $_SESSION['canDelete'] = $userId && $userService->can(PermissionModel::DELETE, $userId);
 $_SESSION['canEdit'] = $userId && $userService->can(PermissionModel::UPDATE, $userId);
+$_SESSION['canCreate'] = $userId && $userService->can(PermissionModel::CREATE, $userId);
 
 ?>
 <!DOCTYPE html>

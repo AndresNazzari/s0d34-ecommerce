@@ -21,7 +21,6 @@ class DetailRepository extends BaseRepository
     protected function columns(): array
     {
         return [
-            'id',
             'name',
             'description',
             'price'

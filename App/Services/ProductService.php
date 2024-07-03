@@ -25,10 +25,30 @@ class ProductService
     {
         return $this->productRepository->get($where, $join);
     }
-    public function softDelete(int $id, array $data) : void
+
+    public function create(array $data): void
     {
-        $this->productRepository->update($id, $data);
+        $path = $this->imageService->upload($data['image']);
+        $imagePath = ['path' => $path];
+        $imageId = $this->imageService->create($imagePath);
+
+        $detailData = [
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'price' => $data['price']
+        ];
+        $detailId = $this->detailRepository->create($detailData);
+
+        $productData = [
+            'id_products_categories' => $data['id_products_categories'],
+            'id_products_details' => $detailId,
+            'id_products_images' => $imageId,
+            'is_deleted' => '0'
+        ];
+
+        $this->productRepository->create($productData);
     }
+
     public function update(int $id, array $data) : void
     {
         $productData = [
@@ -54,6 +74,10 @@ class ProductService
             $this->imageService->update($id, $imageData);
 
         }
+    }
+    public function softDelete(int $id, array $data) : void
+    {
+        $this->productRepository->update($id, $data);
     }
 
 }

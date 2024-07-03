@@ -19,7 +19,6 @@ class ProductRepository extends BaseRepository
     protected function columns(): array
     {
         return [
-            'id',
             'id_products_categories',
             'id_products_details',
             'id_products_images',

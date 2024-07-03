@@ -21,11 +21,18 @@ if ($editMode) {
     AuthService::verify("detail.php?id=$id");
 }
 
+if (isset($_GET['create']) && $_GET['create'] === 'true') {
+    AuthService::verify("index.php");
+    $createMode = true;
+} else {
+    $createMode = false;
+}
+
 $where = [
     ['column' => 'products.is_deleted', 'operator' => '=', 'value' => 0]
 ];
 
-if (isset($_GET['id'])) {
+if (!$createMode && isset($_GET['id'])) {
     $id = (int)$_GET['id'];
     $whereId = [
         ['column' => 'products.id', 'operator' => '=', 'value' => $id]
@@ -44,7 +51,7 @@ $productRepository = new ProductRepository();
 $detailRepository = new DetailRepository();
 $productService = new ProductService($productRepository, $detailRepository, $imageService);
 
-$products = $productService->get($where,  Constants::PRODUCTS_JOIN);
+$products = $createMode ? [] : $productService->get($where,  Constants::PRODUCTS_JOIN);
 
 ?>
 <!DOCTYPE html>
@@ -71,18 +78,47 @@ $products = $productService->get($where,  Constants::PRODUCTS_JOIN);
         <!-- Top header -->
         <?php include $partialsDir . 'contentHeader.php' ?>
 
-        <!-- Image header -->
-        <?php
-        if (!isset($_GET['id'])){
-            include $partialsDir . 'hero.php';
-        }
-        ?>
-
         <!-- Product grid -->
         <?php ?>
         <div class="container d-flex justify-content-evenly flex-wrap">
 
-            <?php if (empty($products)): ?>
+            <?php if ($createMode): ?>
+                <div class="card mb-4 border-0 w-75">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <form action="../App/Controllers/ProductController.php" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to create this product?');">
+                            <input type="hidden" name="action" value="create">
+                            <div class="mb-3">
+                                <label for="productName" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="productName" name="name" value="">
+                            </div>
+                            <div class="mb-3">
+                                <label for="productPrice" class="form-label">Price</label>
+                                <input type="text" class="form-control" id="productPrice" name="price" value="">
+                            </div>
+                            <div class="mb-3">
+                                <label for="productDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="productDescription" name="description"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productCategory" class="form-label">Category</label>
+                                <select class="form-control" id="productCategory" name="category">
+                                    <?php foreach ($categories as $category): ?>
+                                        <option value="<?php echo $category->id ?>"><?php echo $category->name ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productImage" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="productImage" name="image">
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <a href="index.php" class="btn btn-primary">Volver</a>
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <?php elseif (empty($products)): ?>
                 <p>No hay productos disponibles en este momento.</p>
             <?php else: ?>
                 <?php foreach ($products as $product):  ?>

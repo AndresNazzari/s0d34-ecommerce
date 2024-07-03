@@ -15,6 +15,9 @@ unset($_SESSION['error']);
     <div class="w3-container w3-display-container w3-padding-16">
         <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
         <h3 class="w3-wide"><a href="index.php">ACN3AV</a></h3>
+        <?php if (isset($_SESSION['userId']) && $_SESSION['canCreate']): ?>
+            <a href="detail.php?create=true" class="w3-bar-item w3-button w3-padding-24 w3-right">Crear Nuevo Producto</a>
+        <?php endif; ?>
     </div>
     <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
         <?php foreach ($categories as $category): ?>

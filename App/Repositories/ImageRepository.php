@@ -22,7 +22,6 @@ class ImageRepository extends BaseRepository
     protected function columns(): array
     {
         return [
-            'id',
             'path'
         ];
     }

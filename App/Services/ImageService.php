@@ -22,6 +22,10 @@ class ImageService
 
         return $name;
     }
+    public function create(array $data): int
+    {
+        return $this->imageRepository->create($data);
+    }
 
     public function update($id, $data): void
     {

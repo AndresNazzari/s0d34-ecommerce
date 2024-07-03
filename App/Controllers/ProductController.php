@@ -15,11 +15,18 @@ $imageService = new ImageService($imageRepository);
 $productService = new ProductService($productRepository, $detailRepository, $imageService);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) ) {
-    if (isset($_GET['id']) && $_POST['action'] === 'delete'){
-        $id = (int) $_GET['id'];
-        $data = ['is_deleted' => 1];
+    if ($_POST['action'] === 'create') {
+        $data = [
+            'name' => $_POST['name'],
+            'description' => $_POST['description'],
+            'price' => $_POST['price'],
+            'id_products_categories' => $_POST['category'],
+            'image' => $_FILES['image']
+        ];
 
-        $productService->softDelete($id, $data);
+        $productService->create($data);
+        header('Location: ../../Public/index.php');
+        exit;
     }
 
     if ($_POST['action'] === 'update'){
@@ -39,6 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) ) {
         }
 
         $productService->update($id, $data);
+    }
+
+    if (isset($_GET['id']) && $_POST['action'] === 'delete'){
+        $id = (int) $_GET['id'];
+        $data = ['is_deleted' => 1];
+
+        $productService->softDelete($id, $data);
     }
 
     header('location: ../../Public/index.php');

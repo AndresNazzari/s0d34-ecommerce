@@ -91,6 +91,9 @@ abstract class BaseRepository
         $query = $this->createQuery($data);
         $stmt = $this->pdo->prepare($query);
         $data = $this->prepareExecute($data);
+        var_dump($data);
+        var_dump($query);
+
         $stmt->execute($data);
         return $this->pdo->lastInsertId();
     }
@@ -105,7 +108,6 @@ abstract class BaseRepository
         $query = $this->updateQuery($data);
         $stmt = $this->pdo->prepare($query);
         $data = $this->prepareExecute($data, $id);
-
 
         $stmt->execute($data);
     }
