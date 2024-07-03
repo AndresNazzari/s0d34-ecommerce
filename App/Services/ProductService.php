@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-
 use App\Repositories\DetailRepository;
-use App\Repositories\ImageRepository;
 use App\Repositories\ProductRepository;
 
 class ProductService

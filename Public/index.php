@@ -72,13 +72,6 @@ $_SESSION['canCreate'] = $userId && $userService->can(PermissionModel::CREATE, $
         <!-- Top header -->
         <?php include $partialsDir . 'contentHeader.php' ?>
 
-        <!-- Image header -->
-        <?php
-            if (!isset($_GET['C'])){
-                //include $partialsDir . 'hero.php';
-            }
-        ?>
-
         <!-- Product grid -->
         <div class="container d-flex justify-content-evenly flex-wrap">
 

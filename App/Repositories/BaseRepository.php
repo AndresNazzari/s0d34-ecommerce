@@ -36,7 +36,7 @@ abstract class BaseRepository
             $params = $clause['params'];
         }
         $stmt = $this->pdo->prepare($query);
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute($params);
 
         return $stmt->fetchAll();
@@ -75,8 +75,8 @@ abstract class BaseRepository
 
         foreach ($where as $w) {
             $paramName = str_replace('.', '_', $w['column']); // Reemplaza '.' con '_' para evitar errores en la consulta
-            $query .= "AND {$w['column']} {$w['operator']} :{$paramName} ";
-            $params[":{$paramName}"] = $w['value'];
+            $query .= "AND {$w['column']} {$w['operator']} :$paramName ";
+            $params[":$paramName"] = $w['value'];
         }
 
         return ['params' => $params, 'query' => $query];
@@ -88,11 +88,9 @@ abstract class BaseRepository
      */
     public function create(array $data) : int
     {
-        $query = $this->createQuery($data);
+        $query = $this->createQuery();
         $stmt = $this->pdo->prepare($query);
         $data = $this->prepareExecute($data);
-        var_dump($data);
-        var_dump($query);
 
         $stmt->execute($data);
         return $this->pdo->lastInsertId();
@@ -128,7 +126,7 @@ abstract class BaseRepository
      * @param array $data
      * @return string
      */
-    protected function createQuery(array $data) : string
+    protected function createQuery() : string
     {
         $table = $this->table();
         $params = [];

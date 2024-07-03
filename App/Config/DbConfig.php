@@ -6,6 +6,7 @@ use App\Services\AuthService;
 use App\Services\UserService;
 use App\Repositories\UserRepository;
 use PDO;
+use PDOException;
 
 class DbConfig
 {
@@ -18,7 +19,7 @@ class DbConfig
         if (self::$pdo === null) {
             try {
                 self::$pdo = (new DbConfig)->createDbConnection();
-            } catch (\PDOException $e) {
+            } catch (PDOException $e) {
                 echo 'Connection failed: ' . $e->getMessage();
                 return null;
             }
