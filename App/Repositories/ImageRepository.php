@@ -30,15 +30,10 @@ class ImageRepository extends BaseRepository
     public function upload($file, $path) : void
     {
         $manager = new ImageManager(new Driver());
-
         $image = $manager->read($file);
-
         $image->scale(100, 100);
-
         $image->crop(100, 100);
-
         $image->save($path);
 
-        $path = explode('public/', $path);
     }
 }

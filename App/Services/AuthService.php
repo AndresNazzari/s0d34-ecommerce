@@ -34,27 +34,25 @@ class AuthService
 
     public static function logout() : void
     {
-        unset($_SESSION['user_id']);
+        unset($_SESSION['userId']);
     }
     public static function check() : bool
     {
-        return isset($_SESSION['user_id']);
+        return isset($_SESSION['userId']);
     }
     public  static function id() : ?int
     {
-        return $_SESSION['user_id'];
+        return $_SESSION['userId'];
     }
 
     /**
      * Verifica si el user está logueado. Caso contrario redirige.
      */
-    public static function verify(string $url='/backoffice/login')
+    public static function verify(string $url): void
     {
         if (!self::check()) {
             header("location: $url");
             exit;
         }
-
-        //return self::user();
     }
 }

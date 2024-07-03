@@ -25,6 +25,10 @@ class ProductService
     {
         return $this->productRepository->get($where, $join);
     }
+    public function softDelete(int $id, array $data) : void
+    {
+        $this->productRepository->update($id, $data);
+    }
     public function update(int $id, array $data) : void
     {
         $productData = [
@@ -36,8 +40,6 @@ class ProductService
                 'description' => $data['description'],
                 'price' => $data['price']
             ];
-
-
 
         $this->productRepository->update($id, $productData);
         $this->detailRepository->update($id, $detailData);

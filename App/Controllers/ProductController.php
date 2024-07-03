@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) ) {
         $id = (int) $_GET['id'];
         $data = ['is_deleted' => 1];
 
-        $productService->update($id, $data);
+        $productService->softDelete($id, $data);
     }
 
     if ($_POST['action'] === 'update'){

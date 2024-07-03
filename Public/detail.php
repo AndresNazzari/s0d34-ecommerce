@@ -6,6 +6,7 @@ use App\Repositories\CategoryRepository;
 use App\Repositories\DetailRepository;
 use App\Repositories\ImageRepository;
 use App\Repositories\ProductRepository;
+use App\Services\AuthService;
 use App\Services\CategoryService;
 use App\Services\ImageService;
 use App\Services\ProductService;
@@ -14,6 +15,11 @@ session_start();
 $partialsDir = __DIR__ . '/partials/';
 
 $editMode = isset($_GET['edit']) && $_GET['edit'] === 'true';
+
+if ($editMode) {
+    $id = $_GET['id'] ?? 0;
+    AuthService::verify("detail.php?id=$id");
+}
 
 $where = [
     ['column' => 'products.is_deleted', 'operator' => '=', 'value' => 0]
