@@ -14,13 +14,14 @@ $router->login(function () use ($authService) {
     $userId = $authService::login($_POST['username'], $_POST['password']);
             if ($userId) {
                 $_SESSION['userId'] = $userId;
-
+                header('location: ../../Public/index.php');
+                exit;
             }
 
             $_SESSION['error'] = "Invalid username or password.";
 });
 
-$router->logout(function () use ($authService) {
+$router->logout(function () {
     session_unset();
         session_destroy();
 });
